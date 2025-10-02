@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulador de Gestión de Memoria</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Simulador de Memoria</h1>
+    <div class="header-buttons">
+      <button onclick="cargarModo('estatica')">Particiones Estáticas</button>
+      <button onclick="cargarModo('variable')">Particiones Variables</button>
+      <button onclick="cargarModo('dinamica')">Dinámica</button>
+      <button onclick="cargarModo('compactacion')">Con Compactación</button>
+    </div>
+  </header>
+
+  <main id="contenedor">
+    <!-- Aquí se inyectará dinámicamente la interfaz según el modo -->
+  </main>
+
+  <script>
+    function cargarModo(modo) {
+      if (modo === "estatica") {
+        const script = document.createElement("script");
+        script.src = "js/estatica.js";
+        script.onload = () => initEstatica();
+        document.body.appendChild(script);
+      } else {
+        alert("Modo " + modo + " aún no implementado");
+      }
+    }
+
+    // Cargar por defecto el modo estático
+    window.onload = () => cargarModo("estatica");
+  </script>
+</body>
+</html>
