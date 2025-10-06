@@ -7,7 +7,6 @@ const RAM_TOTAL = 16 * 1024; // 16 MiB en KB
 let algoritmo = "first"; // por defecto
 let memoria;
 
-// Tabla de programas (valores en BYTES excepto memKiB)
 const programs = [
   { id: "P1", name: "Notepad", disk: 33808, code: 19524, dataInit: 12352, dataUninit: 1165, memInit: 33041, memUse: 224649, memKiB: 219 },
   { id: "P2", name: "Word", disk: 115086, code: 77539, dataInit: 32680, dataUninit: 4100, memInit: 114319, memUse: 286708, memKiB: 280 },
@@ -18,6 +17,8 @@ const programs = [
   { id: "P7", name: "Spotify", disk: 1589767, code: 590000, dataInit: 974000, dataUninit: 25000, memInit: 1589000, memUse: 1785608, memKiB: 1744 },
   { id: "P8", name: "Adobe Acrobat", disk: 2500767, code: 349000, dataInit: 2150000, dataUninit: 1000, memInit: 2500000, memUse: 2696608, memKiB: 2633 }
 ];
+
+
 // ===================== Inicializar Vista =====================
 export function inicializarVista() {
   memoria = new Memoria(RAM_TOTAL);
@@ -69,6 +70,7 @@ export function inicializarVista() {
           </thead>
           <tbody></tbody>
         </table>
+
         <h2>Programas Instalados</h2>
         <table id="tabla-programas-detallada">
           <thead>
@@ -87,11 +89,6 @@ export function inicializarVista() {
           </thead>
           <tbody></tbody>
         </table>
-        <h2>Estado Global</h2>
-        <div class="estado-global">
-          <p>Ocupado: <span id="mem-ocupado">0</span> KB</p>
-          <p>Libre: <span id="mem-libre">0</span> KB</p>
-        </div>
       </section>
 
       <section class="mapa card">
@@ -145,6 +142,7 @@ function cambiarAlgoritmo(value) {
   console.log("Algoritmo cambiado a:", algoritmo);
 }
 
+
 function renderProgramDetails() {
   const tbody = document.querySelector("#tabla-programas-detallada tbody");
   tbody.innerHTML = "";
@@ -165,9 +163,8 @@ function renderProgramDetails() {
     tbody.appendChild(tr);
 
     // Listener para cargar
-    tr.querySelector(".btn-cargar").addEventListener("click", () => {
-      cargar(pr.id, pr.memUse);
-    });
+    tr.querySelector(".btn-cargar").addEventListener("click", () => cargarProceso(pr.id, pr.memUse));
+    tbody.appendChild(tr);
   });
 }
 
@@ -304,4 +301,3 @@ function cargarProceso(pid, sizeBytes) {
   renderProgramDetails(); // actualizar tabla de programas
   renderizar();           // actualizar vista de memoria
 }
-
