@@ -59,11 +59,7 @@ export function inicializarVista() {
           <tbody></tbody>
         </table>
 
-        <h2>Estado Global</h2>
-        <div class="estado-global">
-          <p>Ocupado: <span id="mem-ocupado">0</span> KB</p>
-          <p>Libre: <span id="mem-libre">0</span> KB</p>
-        </div>
+        
       </section>
 
       <section class="programas card">
@@ -88,6 +84,11 @@ export function inicializarVista() {
           </thead>
           <tbody></tbody>
         </table>
+        <h2>Estado Global</h2>
+        <div class="estado-global">
+          <p>Ocupado: <span id="mem-ocupado">0</span> KB</p>
+          <p>Libre: <span id="mem-libre">0</span> KB</p>
+        </div>
       </section>
 
       <section class="mapa card">
@@ -255,25 +256,40 @@ function renderResumen() {
 function cargarProceso(pid, sizeBytes) {
   const sizeKB = Math.ceil(sizeBytes / 1024);
   const programa = { id: pid, tamano: sizeKB };
-
   let ok = false;
 
   if (algoritmo === "first") {
-    // firstFit ahora devuelve la partición, hay que asignar manualmente
     const p = firstFit(memoria, programa);
     if (p) {
-      p.id = programa.id;
+      p.id = pid;
       p.estado = "ocupado";
       ok = true;
     }
   } else if (algoritmo === "best") {
-    ok = bestFit(memoria, programa);
+    const p = bestFit(memoria, programa);
+    if (p) {
+      p.id = pid;
+      p.estado = "ocupado";
+      ok = true;
+    }
   } else if (algoritmo === "worst") {
-    ok = worstFit(memoria, programa);
+    const p = worstFit(memoria, programa);
+    if (p) {
+      p.id = pid;
+      p.estado = "ocupado";
+      ok = true;
+    }
   } else if (algoritmo === "next") {
-    ok = nextFit(memoria, programa);
+    const p = nextFit(memoria, programa);
+    if (p) {
+      p.id = pid;
+      p.estado = "ocupado";
+      ok = true;
+    }
   }
 
   if (!ok) alert("Memoria insuficiente para " + pid);
-  renderizar();
+  renderProgramDetails(); // actualizar tabla de programas
+  renderizar();           // actualizar vista de memoria
 }
+
