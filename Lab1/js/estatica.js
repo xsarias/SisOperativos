@@ -75,7 +75,7 @@ export function inicializarVista() {
           </thead>
           <tbody></tbody>
         </table>
-        <h2>Tabla Detallada de Programas</h2>
+        <h2>Programas Instalados</h2>
         <table id="tabla-programas-detallada">
           <thead>
             <tr>

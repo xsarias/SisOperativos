@@ -9,16 +9,15 @@ let memoria;
 
 // Tabla de programas (valores en BYTES excepto memKiB)
 const programs = [
-  { id: "P1", name: "Notepad", memUse: 224649, memKiB: 219 },
-  { id: "P2", name: "Word", memUse: 286708, memKiB: 280 },
-  { id: "P3", name: "Excel", memUse: 309150, memKiB: 302 },
-  { id: "P4", name: "AutoCAD", memUse: 436201, memKiB: 426 },
-  { id: "P5", name: "Calculadora", memUse: 209462, memKiB: 205 },
-  { id: "P6", name: "Visual Studio Code", memUse: 3996608, memKiB: 3903 },
-  { id: "P7", name: "Spotify", memUse: 1785608, memKiB: 1744 },
-  { id: "P8", name: "Adobe Acrobat", memUse: 2696608, memKiB: 2633 }
+  { id: "P1", name: "Notepad", disk: 33808, code: 19524, dataInit: 12352, dataUninit: 1165, memInit: 33041, memUse: 224649, memKiB: 219 },
+  { id: "P2", name: "Word", disk: 115086, code: 77539, dataInit: 32680, dataUninit: 4100, memInit: 114319, memUse: 286708, memKiB: 280 },
+  { id: "P3", name: "Excel", disk: 132111, code: 99542, dataInit: 24245, dataUninit: 7557, memInit: 131344, memUse: 309150, memKiB: 302 },
+  { id: "P4", name: "AutoCAD", disk: 240360, code: 115000, dataInit: 123470, dataUninit: 1123, memInit: 239593, memUse: 436201, memKiB: 426 },
+  { id: "P5", name: "Calculadora", disk: 16121, code: 12342, dataInit: 1256, dataUninit: 1756, memInit: 15354, memUse: 209462, memKiB: 205 },
+  { id: "P6", name: "Visual Studio Code", disk: 3800767, code: 525000, dataInit: 3224000, dataUninit: 51000, memInit: 3800000, memUse: 3996608, memKiB: 3903 },
+  { id: "P7", name: "Spotify", disk: 1589767, code: 590000, dataInit: 974000, dataUninit: 25000, memInit: 1589000, memUse: 1785608, memKiB: 1744 },
+  { id: "P8", name: "Adobe Acrobat", disk: 2500767, code: 349000, dataInit: 2150000, dataUninit: 1000, memInit: 2500000, memUse: 2696608, memKiB: 2633 }
 ];
-
 // ===================== Inicializar Vista =====================
 export function inicializarVista() {
   memoria = new Memoria(RAM_TOTAL);
@@ -70,13 +69,17 @@ export function inicializarVista() {
           </thead>
           <tbody></tbody>
         </table>
-
-        <h2>Tabla Detallada de Programas</h2>
+        <h2>Programas Instalados</h2>
         <table id="tabla-programas-detallada">
           <thead>
             <tr>
               <th>PID</th>
               <th>Nombre</th>
+              <th>Disco</th>
+              <th>Código</th>
+              <th>Datos Init</th>
+              <th>Datos No Init</th>
+              <th>Memoria Inicial</th>
               <th>Memoria a usar (Bytes)</th>
               <th>KiB</th>
               <th>Acción</th>
@@ -150,12 +153,21 @@ function renderProgramDetails() {
     tr.innerHTML = `
       <td>${pr.id}</td>
       <td>${pr.name}</td>
+      <td>${pr.disk}</td>
+      <td>${pr.code}</td>
+      <td>${pr.dataInit}</td>
+      <td>${pr.dataUninit}</td>
+      <td>${pr.memInit}</td>
       <td>${pr.memUse}</td>
       <td>${pr.memKiB}</td>
       <td><button class="btn-cargar">Cargar</button></td>
     `;
-    tr.querySelector(".btn-cargar").addEventListener("click", () => cargarProceso(pr.id, pr.memUse));
     tbody.appendChild(tr);
+
+    // Listener para cargar
+    tr.querySelector(".btn-cargar").addEventListener("click", () => {
+      cargar(pr.id, pr.memUse);
+    });
   });
 }
 

@@ -42,4 +42,5 @@ export class Memoria {
       bloque.id = null;
     }
   }
+  
 }
