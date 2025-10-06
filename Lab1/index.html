@@ -1,134 +1,54 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
-  <title>Simulador de Memoria</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Simulación de Memoria</title>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
   <header>
-    <h1>Simulador de Memoria</h1>
-    <div class="header-buttons">
-      <button onclick="simular()">Simular</button>
-      <button onclick="reiniciar()">Reiniciar</button>
-    </div>
+    <h1>Simulación de Memoria</h1>
+    <nav>
+      <button onclick="cargarVista('estatica')">Estática Tamaño Fijo</button>
+      <button onclick="cargarVista('estatvari')">Estática Variable</button>
+      <button onclick="cargarVista('nocompac')">Dinámica sin Compactación</button>
+      <button onclick="cargarVista('estatvari')">Dinámica con Compactación</button>
+    </nav>
   </header>
 
   <main>
-    <!-- Acciones -->
-    <section class="acciones">
-      <input type="text" id="pid" placeholder="PID">
-      <input type="number" id="tamano" placeholder="Tamaño (KB)">
-      <button onclick="cargarProceso()">Cargar</button>
-      <button onclick="liberarProceso()">Liberar</button>
-    </section>
-
-    <!-- Representación gráfica -->
-    <section>
-      <h2>Memoria</h2>
-      <div class="memoria" id="memoria"></div>
-    </section>
-
-    <!-- Estado de memoria -->
-    <section>
-      <h2>Estado de la memoria</h2>
-      <table id="estado-memoria">
-        <tr><th>Ocupado</th><td id="mem-ocupado">0</td></tr>
-        <tr><th>Libre</th><td id="mem-libre">0</td></tr>
-      </table>
-    </section>
-
-    <!-- Tabla de particiones -->
-    <section>
-      <h2>Tabla de descripción de particiones</h2>
-      <table id="tabla-particiones">
-        <thead>
-          <tr>
-            <th>PID</th>
-            <th>L/O</th>
-            <th>Base DEC</th>
-            <th>Base HEX</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
-
-    <!-- Generalidades -->
-    <section>
-      <h2>Generalidades</h2>
-      <table id="tabla-generalidades">
-        <thead>
-          <tr>
-            <th>Descripción</th>
-            <th>MiB</th>
-            <th>KiB</th>
-            <th>Bytes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>RAM instalada</td>
-            <td>16</td>
-            <td>16384</td>
-            <td>16777216</td>
-          </tr>
-          <tr>
-            <td>Pila</td>
-            <td>-</td>
-            <td>64</td>
-            <td>65536</td>
-          </tr>
-          <tr>
-            <td>Montículo</td>
-            <td>-</td>
-            <td>128</td>
-            <td>131072</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- Programas -->
-    <section>
-      <h2>Programas instalados</h2>
-      <table id="tabla-programas">
-        <thead>
-          <tr>
-            <th>PID</th>
-            <th>Nombre</th>
-            <th>Tamaño en disco</th>
-            <th>Memoria inicial</th>
-            <th>Memoria a usar</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>P1</td>
-            <td>Notepad</td>
-            <td>33.808</td>
-            <td>33.041</td>
-            <td>224.649</td>
-          </tr>
-          <tr>
-            <td>P2</td>
-            <td>Word</td>
-            <td>115.086</td>
-            <td>114.319</td>
-            <td>286.708</td>
-          </tr>
-          <tr>
-            <td>P3</td>
-            <td>Excel</td>
-            <td>132.111</td>
-            <td>131.334</td>
-            <td>309.150</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+    <div id="contenedor"></div>
   </main>
 
-  <script src="script.js"></script>
+  <!-- Scripts -->
+  <script>
+    async function cargarVista(tipo) {
+      const contenedor = document.getElementById("contenedor");
+      contenedor.innerHTML = "";
+
+      // Borra cualquier script anterior de vista
+      document.querySelectorAll("script[data-vista]").forEach(s => s.remove());
+
+      // Usar import dinámico para poder llamar a inicializarVista
+      try {
+        const mod = await import(`./js/${tipo}.js`);
+        if (mod.inicializarVista && typeof mod.inicializarVista === "function") {
+          mod.inicializarVista();
+          console.log(`Vista ${tipo} inicializada`);
+        }
+      } catch (err) {
+        console.error(`Error cargando la vista ${tipo}:`, err);
+      }
+    }
+
+    // Cargar vista estática al inicio
+    window.addEventListener("DOMContentLoaded", () => {
+      cargarVista("estatica");
+    });
+  </script>
+
 </body>
+
 </html>

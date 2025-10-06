@@ -1,4 +1,4 @@
-/* Estilos generales */
+/* ===== Estilos generales ===== */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -17,7 +17,7 @@ header h1 {
   margin: 0 0 10px 0;
 }
 
-.header-buttons button {
+nav button {
   margin: 5px;
   padding: 8px 12px;
   border: none;
@@ -28,7 +28,7 @@ header h1 {
   font-weight: bold;
 }
 
-.header-buttons button:hover {
+nav button:hover {
   background-color: #1c5980;
 }
 
@@ -36,85 +36,46 @@ main {
   padding: 20px;
 }
 
-h2 {
-  margin-top: 30px;
-}
-
-/* Acciones */
-.acciones {
-  margin-bottom: 20px;
-}
-
-.acciones input {
-  padding: 5px;
-  margin-right: 10px;
-  width: 120px;
-}
-
-.acciones button {
-  padding: 5px 10px;
-  margin-right: 5px;
-  cursor: pointer;
-  border: none;
-  border-radius: 4px;
-  background-color: #27ae60;
-  color: white;
-  font-weight: bold;
-}
-
-.acciones button:hover {
-  background-color: #1e8449;
-}
-
-/* Memoria gráfica */
-.memoria {
+/* ===== Layout general ===== */
+.layout {
   display: grid;
-  grid-template-columns: repeat(8, 60px);
-  gap: 4px;
-  margin: 20px 0;
-  border: 2px solid #333;
-  padding: 10px;
-  background-color: #ecf0f1;
+  grid-template-columns: 0.88fr 1.2fr 0.8fr;
+  /* tabla - programas - memoria */
+  gap: 20px;
+  align-items: start;
 }
 
-.bloque {
-  border: 1px solid #333;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  border-radius: 4px;
+/* ===== Secciones tipo tarjeta ===== */
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.ocupado {
-  background-color: #27ae60; /* verde */
-  color: white;
+.card h2 {
+  margin-top: 0;
+  text-align: center;
+  color: #34495e;
+  font-size: 1.2em;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 6px;
 }
 
-.so {
-  background-color: #f1c40f; /* amarillo */
-  color: black;
-  font-weight: bold;
-}
-
-.libre {
-  background-color: #95a5a6; /* gris */
-  color: white;
-}
-
-/* Tablas */
+/* ===== Tablas ===== */
 table {
   border-collapse: collapse;
   width: 100%;
   margin: 15px 0;
+  font-size: 13px;
 }
 
-table th, table td {
-  border: 1px solid #333;
+table th,
+table td {
+  border: 1px solid #bbb;
   padding: 6px;
   text-align: center;
-  font-size: 13px;
 }
 
 table th {
@@ -122,7 +83,125 @@ table th {
   color: white;
 }
 
-#estado-memoria td {
+table td button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  background: #27ae60;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+table td button:hover {
+  background: #1e8449;
+}
+
+/* ===== Estado global ===== */
+.programas p {
   background: #ecf0f1;
+  padding: 6px;
+  border-radius: 5px;
   font-weight: bold;
+  margin: 5px 0;
+  text-align: center;
+}
+
+/* ===== Mapa de Memoria ===== */
+.memoria {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #444;
+  height: 700px;
+  /* más alto y visible */
+  font-size: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  /* sin scroll */
+}
+
+.bloque {
+  flex: 1;
+  /* cada bloque ocupa el mismo espacio */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #888;
+  padding: 2px 6px;
+  font-weight: bold;
+}
+
+/* Colores */
+.bloque.SO {
+  background: #9b59b6;
+  color: white;
+}
+
+.bloque.ocupado {
+  background: #c95245;
+  color: white;
+}
+
+.bloque.libre {
+  background: #419464;
+  color: white;
+}
+
+/* Direcciones */
+.dir-hex,
+.dir-dec {
+  font-family: monospace;
+  font-size: 0.75em;
+  color: #222;
+}
+
+/* Estilos para las particiones */
+.particion {
+  border: 1px solid #ccc;
+  margin: 2px 0;
+  padding: 6px;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Colores según estado */
+.particion.libre {
+  background: #e8f5e9;
+  /* verde claro */
+  color: #2e7d32;
+  border: 1px solid #81c784;
+}
+
+.particion.ocupado {
+  background: #ffebee;
+  /* rojo claro */
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+/* Estado global */
+.estado-global {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f4f6f8;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.estado-global h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: #444;
+}
+
+.estado-global p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+}
+
+.estado-global span {
+  font-weight: bold;
+  color: #1976d2;
 }
