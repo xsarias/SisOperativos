@@ -227,7 +227,8 @@ window.cargar = function(pid, sizeBytes) {
   renderizar();
 };
 
+
 window.liberar = function(pid) {
-  memoria.liberarProceso(pid); // MemoriaDinamica debe compactar automáticamente al liberar
+  memoria.liberarProceso(pid, true); // compacta siempre
   renderizar();
 };

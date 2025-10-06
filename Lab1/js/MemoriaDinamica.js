@@ -1,4 +1,3 @@
-// js/MemoriaDinamica.js
 import { bestFit } from "./algoritmos.js";
 
 export class MemoriaDinamica {
@@ -11,7 +10,8 @@ export class MemoriaDinamica {
   }
 
   cargarProceso(pid, sizeKB) {
-    const hueco = bestFit(this.particiones, sizeKB); // algoritmo mejor ajuste
+    const hueco = bestFit(this.particiones, sizeKB);
+
     if (!hueco) return false;
 
     const idx = this.particiones.indexOf(hueco);
