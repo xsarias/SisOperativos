@@ -1,48 +1,54 @@
+// js/MemoriaDinamica.js
+import { bestFit } from "./algoritmos.js";
+
 export class MemoriaDinamica {
-  constructor(totalKB) {
-    this.totalKB = totalKB;
+  constructor(total) {
+    this.total = total;
     this.particiones = [
-      { id: "SO", size: 512, estado: "Ocupado", base: 0 }
+      { base: 0, size: 1024, estado: "Ocupado", id: "SO" },
+      { base: 1024, size: total - 1024, estado: "Libre", id: null }
     ];
-    this.particiones.push({
-      id: null,
-      size: totalKB - 512,
-      estado: "Libre",
-      base: 512
-    });
-  }
-
-  getOcupado() {
-    return this.particiones
-      .filter(p => p.estado === "Ocupado")
-      .reduce((acc, p) => acc + p.size, 0);
-  }
-
-  getLibre() {
-    return this.particiones
-      .filter(p => p.estado === "Libre")
-      .reduce((acc, p) => acc + p.size, 0);
   }
 
   cargarProceso(pid, sizeKB) {
-    let bloque = this.particiones.find(p => p.estado === "Libre" && p.size >= sizeKB);
-    if (!bloque) return false;
+    const hueco = bestFit(this.particiones, sizeKB); // algoritmo mejor ajuste
+    if (!hueco) return false;
 
-    const idx = this.particiones.indexOf(bloque);
-    this.particiones.splice(idx, 1,
-      { id: pid, size: sizeKB, estado: "Ocupado", base: bloque.base },
-      { id: null, size: bloque.size - sizeKB, estado: "Libre", base: bloque.base + sizeKB }
-    );
+    const idx = this.particiones.indexOf(hueco);
+    if (hueco.size > sizeKB) {
+      this.particiones.splice(idx, 1,
+        { base: hueco.base, size: sizeKB, estado: "Ocupado", id: pid },
+        { base: hueco.base + sizeKB, size: hueco.size - sizeKB, estado: "Libre", id: null }
+      );
+    } else {
+      this.particiones[idx].estado = "Ocupado";
+      this.particiones[idx].id = pid;
+    }
     return true;
   }
 
-  liberarProceso(pid) {
+  liberarProceso(pid, usarCompactacion = false) {
     const idx = this.particiones.findIndex(p => p.id === pid);
     if (idx >= 0) {
       this.particiones[idx].estado = "Libre";
       this.particiones[idx].id = null;
-      // 🔹 Compactar inmediatamente al liberar
-      this.compactar();
+      if (usarCompactacion) {
+        this.compactar();
+      } else {
+        this.fusionarLibres();
+      }
+    }
+  }
+
+  fusionarLibres() {
+    for (let i = 0; i < this.particiones.length - 1; i++) {
+      const actual = this.particiones[i];
+      const siguiente = this.particiones[i + 1];
+      if (actual.estado === "Libre" && siguiente.estado === "Libre") {
+        actual.size += siguiente.size;
+        this.particiones.splice(i + 1, 1);
+        i--;
+      }
     }
   }
 
@@ -54,9 +60,19 @@ export class MemoriaDinamica {
       base += p.size;
       return nuevo;
     });
-    const libre = this.totalKB - base;
+    const libre = this.total - base;
     if (libre > 0) {
       this.particiones.push({ id: null, size: libre, estado: "Libre", base });
     }
+  }
+
+  getOcupado() {
+    return this.particiones.filter(p => p.estado === "Ocupado")
+      .reduce((acc, p) => acc + p.size, 0);
+  }
+
+  getLibre() {
+    return this.particiones.filter(p => p.estado === "Libre")
+      .reduce((acc, p) => acc + p.size, 0);
   }
 }
