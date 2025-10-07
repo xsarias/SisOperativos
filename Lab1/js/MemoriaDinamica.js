@@ -1,78 +1,75 @@
-import { bestFit } from "./algoritmos.js";
+import { firstFit, bestFit, worstFit, nextFit } from "./algoritmos.js";
 
 export class MemoriaDinamica {
-  constructor(total) {
-    this.total = total;
+  constructor(totalKB) {
     this.particiones = [
-      { base: 0, size: 1024, estado: "Ocupado", id: "SO" },
-      { base: 1024, size: total - 1024, estado: "Libre", id: null }
+      { base: 0, size: 256, estado: "Ocupado", id: "SO" },
+      { base: 256, size: totalKB - 256, estado: "Libre", id: null }
     ];
   }
 
-  cargarProceso(pid, sizeKB) {
-    const hueco = bestFit(this.particiones, sizeKB);
+  cargarProceso(pid, sizeKB, algoritmo = "first") {
+    let particion;
+    switch (algoritmo) {
+      case "best": particion = bestFit(this.particiones, sizeKB); break;
+      case "worst": particion = worstFit(this.particiones, sizeKB); break;
+      case "next": particion = nextFit(this.particiones, sizeKB); break;
+      default: particion = firstFit(this.particiones, sizeKB);
+    }
+    if (!particion) return false;
 
-    if (!hueco) return false;
-
-    const idx = this.particiones.indexOf(hueco);
-    if (hueco.size > sizeKB) {
-      this.particiones.splice(idx, 1,
-        { base: hueco.base, size: sizeKB, estado: "Ocupado", id: pid },
-        { base: hueco.base + sizeKB, size: hueco.size - sizeKB, estado: "Libre", id: null }
-      );
+    // Si cabe exacto
+    if (particion.size === sizeKB) {
+      particion.estado = "Ocupado";
+      particion.id = pid;
     } else {
-      this.particiones[idx].estado = "Ocupado";
-      this.particiones[idx].id = pid;
+      // dividir partición
+      const nueva = {
+        base: particion.base + sizeKB,
+        size: particion.size - sizeKB,
+        estado: "Libre",
+        id: null
+      };
+      particion.size = sizeKB;
+      particion.estado = "Ocupado";
+      particion.id = pid;
+      this.particiones.splice(this.particiones.indexOf(particion) + 1, 0, nueva);
     }
     return true;
   }
 
-  liberarProceso(pid, usarCompactacion = false) {
+  liberarProceso(pid, compactar = false) {
     const idx = this.particiones.findIndex(p => p.id === pid);
-    if (idx >= 0) {
-      this.particiones[idx].estado = "Libre";
-      this.particiones[idx].id = null;
-      if (usarCompactacion) {
-        this.compactar();
-      } else {
-        this.fusionarLibres();
-      }
-    }
-  }
+    if (idx < 0) return;
+    this.particiones[idx].estado = "Libre";
+    this.particiones[idx].id = null;
 
-  fusionarLibres() {
-    for (let i = 0; i < this.particiones.length - 1; i++) {
-      const actual = this.particiones[i];
-      const siguiente = this.particiones[i + 1];
-      if (actual.estado === "Libre" && siguiente.estado === "Libre") {
-        actual.size += siguiente.size;
-        this.particiones.splice(i + 1, 1);
-        i--;
-      }
-    }
+    if (compactar) this.compactar();
   }
 
   compactar() {
-    const ocupados = this.particiones.filter(p => p.estado === "Ocupado");
-    let base = 0;
-    this.particiones = ocupados.map(p => {
-      const nuevo = { ...p, base };
-      base += p.size;
-      return nuevo;
+    let baseActual = 0;
+    const ocupadas = this.particiones.filter(p => p.estado === "Ocupado");
+    ocupadas.forEach(p => {
+      p.base = baseActual;
+      baseActual += p.size;
     });
-    const libre = this.total - base;
-    if (libre > 0) {
-      this.particiones.push({ id: null, size: libre, estado: "Libre", base });
-    }
+    const libreTotal = this.particiones
+      .filter(p => p.estado === "Libre")
+      .reduce((acc, p) => acc + p.size, 0);
+    this.particiones = [
+      ...ocupadas,
+      { base: baseActual, size: libreTotal, estado: "Libre", id: null }
+    ];
   }
 
   getOcupado() {
     return this.particiones.filter(p => p.estado === "Ocupado")
-      .reduce((acc, p) => acc + p.size, 0);
+      .reduce((a, p) => a + p.size, 0);
   }
 
   getLibre() {
     return this.particiones.filter(p => p.estado === "Libre")
-      .reduce((acc, p) => acc + p.size, 0);
+      .reduce((a, p) => a + p.size, 0);
   }
 }
