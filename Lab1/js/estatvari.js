@@ -2,7 +2,7 @@
 import { firstFit, bestFit, worstFit, nextFit } from "./algoritmos.js";
 import { Memoria } from "./memory.js";
 
-// Configuración
+// ===================== Configuración =====================
 const RAM_TOTAL = 16 * 1024; // 16 MiB en KB
 let algoritmo = "first"; // por defecto
 let memoria;
@@ -18,7 +18,6 @@ const programs = [
   { id: "P8", name: "Adobe Acrobat", disk: 2500767, code: 349000, dataInit: 2150000, dataUninit: 1000, memInit: 2500000, memUse: 2696608, memKiB: 2633 }
 ];
 
-
 // ===================== Inicializar Vista =====================
 export function inicializarVista() {
   memoria = new Memoria(RAM_TOTAL);
@@ -33,6 +32,7 @@ export function inicializarVista() {
           <option value="first">Primer Ajuste</option>
           <option value="best">Mejor Ajuste</option>
           <option value="worst">Peor Ajuste</option>
+          <option value="next">Siguiente Ajuste</option>
         </select>
 
         <h2>Tamaño Particiones</h2>
@@ -58,8 +58,6 @@ export function inicializarVista() {
           </thead>
           <tbody></tbody>
         </table>
-
-        
       </section>
 
       <section class="programas card">
@@ -109,17 +107,20 @@ export function inicializarVista() {
 
 // ===================== Crear Particiones Iniciales =====================
 function crearParticionesIniciales() {
-  // Fijar partición del SO
-  memoria.particiones = [{ base: 0, tamano: 512, estado: "ocupado", id: "SO" }];
+  memoria.particiones = [{ base: 0, size: 512, estado: "Ocupado", id: "SO" }];
 
-  // Particiones libres variadas en KB
+  // Particiones libres en KB
   const tamaños = [512, 1024, 2048, 4096, 8192, 1024, 2048, 512];
-  let base = 512; // empieza después del SO
-  memoria.particiones.push(...tamaños.map(tam => {
-    const p = { base, tamano: tam, estado: "libre" };
+  let base = 512; // comienza después del SO
+  tamaños.forEach(tam => {
+    memoria.particiones.push({
+      base: base,
+      size: tam,
+      estado: "Libre",
+      id: null
+    });
     base += tam;
-    return p;
-  }));
+  });
 }
 
 // ===================== Tabla Tamaño de Particiones =====================
@@ -127,21 +128,20 @@ function renderTablaParticionSize() {
   const tbody = document.querySelector("#tabla-particion-size tbody");
   tbody.innerHTML = "";
   memoria.particiones.forEach(p => {
-    const bytes = p.tamano * 1024;
-    const KiB = p.tamano;
-    const MiB = (p.tamano / 1024).toFixed(2);
+    const bytes = p.size * 1024;
+    const KiB = p.size;
+    const MiB = (p.size / 1024).toFixed(2);
     const tr = document.createElement("tr");
     tr.innerHTML = `<td>${bytes.toLocaleString()}</td><td>${KiB}</td><td>${MiB}</td>`;
     tbody.appendChild(tr);
   });
 }
 
-// ===================== Funciones auxiliares =====================
+// ===================== Funciones Auxiliares =====================
 function cambiarAlgoritmo(value) {
   algoritmo = value;
   console.log("Algoritmo cambiado a:", algoritmo);
 }
-
 
 function renderProgramDetails() {
   const tbody = document.querySelector("#tabla-programas-detallada tbody");
@@ -160,56 +160,9 @@ function renderProgramDetails() {
       <td>${pr.memKiB}</td>
       <td><button class="btn-cargar">Cargar</button></td>
     `;
-    tbody.appendChild(tr);
-
-    // Listener para cargar
     tr.querySelector(".btn-cargar").addEventListener("click", () => cargarProceso(pr.id, pr.memUse));
     tbody.appendChild(tr);
   });
-}
-
-function renderizar() {
-  const memDiv = document.getElementById("memoria");
-  memDiv.innerHTML = "";
-
-  memoria.particiones.slice().reverse().forEach(p => {
-    const div = document.createElement("div");
-    div.classList.add("bloque", p.estado);
-    const baseBytes = (p.base || 0) * 1024;
-    const hexAddr = baseBytes.toString(16).toUpperCase().padStart(6, "0");
-    div.innerHTML = `
-      <span class="dir-hex">0x${hexAddr}</span>
-      <span class="contenido">${p.id ? p.id : "Libre"} (${p.tamano} KB)</span>
-      <span class="dir-dec">${baseBytes}</span>
-    `;
-    memDiv.appendChild(div);
-  });
-
-  // Tabla de particiones
-  const tbody = document.querySelector("#tabla-particiones tbody");
-  tbody.innerHTML = "";
-  memoria.particiones.forEach((p, idx) => {
-    const baseBytes = (p.base || 0) * 1024;
-    const baseHex = "0x" + baseBytes.toString(16).toUpperCase().padStart(6, "0");
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${idx + 1}</td>
-      <td>${p.base}</td>
-      <td>${baseHex}</td>
-      <td>${p.tamano}</td>
-      <td>${p.estado}</td>
-      <td>${p.id ?? "-"}</td>
-      <td>${p.id && p.id !== "SO" ? `<button class="btn-liberar">Liberar</button>` : "-"}</td>
-    `;
-    if (p.id && p.id !== "SO") {
-      tr.querySelector(".btn-liberar").addEventListener("click", () => liberarProceso(p.id));
-    }
-    tbody.appendChild(tr);
-  });
-
-  // Estado global
-  document.getElementById("mem-ocupado").textContent = memoria.getOcupado?.() ?? 0;
-  document.getElementById("mem-libre").textContent = memoria.getLibre?.() ?? (RAM_TOTAL - (memoria.getOcupado?.() ?? 0));
 }
 
 // ===================== Tabla de Generalidades =====================
@@ -228,76 +181,79 @@ function renderResumen() {
   const exeBytes = 767;
 
   tbody.innerHTML = `
-    <tr>
-      <td>RAM Instalada</td>
-      <td>${RAM_TOTAL_MiB}</td>
-      <td>${RAM_TOTAL_KB}</td>
-      <td>${RAM_TOTAL_Bytes}</td>
-    </tr>
-    <tr>
-      <td>Pila</td>
-      <td></td>
-      <td>${pilaKB}</td>
-      <td>${pilaKB * 1024}</td>
-    </tr>
-    <tr>
-      <td>Montículo</td>
-      <td></td>
-      <td>${monticuloKB}</td>
-      <td>${monticuloKB * 1024}</td>
-    </tr>
-    <tr>
-      <td>Total SO</td>
-      <td></td>
-      <td>${totalSO_KB}</td>
-      <td>${totalSO_Bytes}</td>
-    </tr>
-    <tr>
-      <td>Encabezado EXE</td>
-      <td></td>
-      <td></td>
-      <td>${exeBytes}</td>
-    </tr>
+    <tr><td>RAM Instalada</td><td>${RAM_TOTAL_MiB}</td><td>${RAM_TOTAL_KB}</td><td>${RAM_TOTAL_Bytes}</td></tr>
+    <tr><td>Pila</td><td></td><td>${pilaKB}</td><td>${pilaKB * 1024}</td></tr>
+    <tr><td>Montículo</td><td></td><td>${monticuloKB}</td><td>${monticuloKB * 1024}</td></tr>
+    <tr><td>Total SO</td><td></td><td>${totalSO_KB}</td><td>${totalSO_Bytes}</td></tr>
+    <tr><td>Encabezado EXE</td><td></td><td></td><td>${exeBytes}</td></tr>
   `;
+}
+
+// ===================== Renderización General =====================
+function renderizar() {
+  const memDiv = document.getElementById("memoria");
+  memDiv.innerHTML = "";
+
+  memoria.particiones.slice().reverse().forEach(p => {
+    const div = document.createElement("div");
+    div.classList.add("bloque", p.estado === "Ocupado" ? "ocupado" : "libre");
+    const baseBytes = (p.base || 0) * 1024;
+    const hexAddr = baseBytes.toString(16).toUpperCase().padStart(6, "0");
+    div.innerHTML = `
+      <span class="dir-hex">0x${hexAddr}</span>
+      <span class="contenido">${p.id || "Libre"} (${p.size} KB)</span>
+      <span class="dir-dec">${baseBytes}</span>
+    `;
+    memDiv.appendChild(div);
+  });
+
+  const tbody = document.querySelector("#tabla-particiones tbody");
+  tbody.innerHTML = "";
+  memoria.particiones.forEach((p, idx) => {
+    const baseBytes = (p.base || 0) * 1024;
+    const baseHex = "0x" + baseBytes.toString(16).toUpperCase().padStart(6, "0");
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${idx + 1}</td>
+      <td>${p.base}</td>
+      <td>${baseHex}</td>
+      <td>${p.size}</td>
+      <td>${p.estado}</td>
+      <td>${p.id ?? "-"}</td>
+      <td>${p.id && p.id !== "SO" ? `<button class="btn-liberar">Liberar</button>` : "-"}</td>
+    `;
+    if (p.id && p.id !== "SO") {
+      tr.querySelector(".btn-liberar").addEventListener("click", () => liberarProceso(p.id));
+    }
+    tbody.appendChild(tr);
+  });
 }
 
 // ===================== Acciones =====================
 function cargarProceso(pid, sizeBytes) {
   const sizeKB = Math.ceil(sizeBytes / 1024);
-  const programa = { id: pid, tamano: sizeKB };
-  let ok = false;
+  let p = null;
 
-  if (algoritmo === "first") {
-    const p = firstFit(memoria, programa);
-    if (p) {
-      p.id = pid;
-      p.estado = "ocupado";
-      ok = true;
-    }
-  } else if (algoritmo === "best") {
-    const p = bestFit(memoria, programa);
-    if (p) {
-      p.id = pid;
-      p.estado = "ocupado";
-      ok = true;
-    }
-  } else if (algoritmo === "worst") {
-    const p = worstFit(memoria, programa);
-    if (p) {
-      p.id = pid;
-      p.estado = "ocupado";
-      ok = true;
-    }
-  } else if (algoritmo === "next") {
-    const p = nextFit(memoria, programa);
-    if (p) {
-      p.id = pid;
-      p.estado = "ocupado";
-      ok = true;
-    }
+  if (algoritmo === "first") p = firstFit(memoria.particiones, sizeKB);
+  else if (algoritmo === "best") p = bestFit(memoria.particiones, sizeKB);
+  else if (algoritmo === "worst") p = worstFit(memoria.particiones, sizeKB);
+  else if (algoritmo === "next") p = nextFit(memoria.particiones, sizeKB);
+
+  if (!p) return alert("Memoria insuficiente para " + pid);
+
+  p.estado = "Ocupado";
+  p.id = pid;
+
+  renderProgramDetails();
+  renderizar();
+}
+
+function liberarProceso(pid) {
+  const p = memoria.particiones.find(part => part.id === pid);
+  if (p) {
+    p.estado = "Libre";
+    p.id = null;
   }
-
-  if (!ok) alert("Memoria insuficiente para " + pid);
-  renderProgramDetails(); // actualizar tabla de programas
-  renderizar();           // actualizar vista de memoria
+  renderProgramDetails();
+  renderizar();
 }
