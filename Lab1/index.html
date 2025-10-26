@@ -11,29 +11,35 @@
   <header>
     <h1>Simulación de Memoria</h1>
     <nav>
-      <button onclick="cargarVista('estatica')">Estática Tamaño Fijo</button>
-      <button onclick="cargarVista('estatvari')">Estática Variable</button>
-      <button onclick="cargarVista('SinCompactacion')">Dinámica sin Compactación</button>
-      <button onclick="cargarVista('compactacion')">Dinámica con Compactación</button>
-      <button onclick="cargarVista('segmentacion')">Segmentación</button>
-      <button onclick="cargarVista('paginacion')">Paginación</button>
+      <button onclick="cargarVista('estatica', this)">Estática Tamaño Fijo</button>
+      <button onclick="cargarVista('estatvari', this)">Estática Variable</button>
+      <button onclick="cargarVista('SinCompactacion', this)">Dinámica sin Compactación</button>
+      <button onclick="cargarVista('compactacion', this)">Dinámica con Compactación</button>
+      <button onclick="cargarVista('segmentacion', this)">Segmentación</button>
+      <button onclick="cargarVista('paginacion', this)">Paginación</button>
     </nav>
   </header>
+
 
   <main>
     <div id="contenedor"></div>
   </main>
 
-  <!-- Scripts -->
   <script>
-    async function cargarVista(tipo) {
+    async function cargarVista(tipo, boton = null) {
       const contenedor = document.getElementById("contenedor");
       contenedor.innerHTML = "";
 
-      // Borra cualquier script anterior de vista
+      // Quitar clase "active" de todos los botones del menú
+      document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
+
+      // Si se hizo clic en un botón, marcarlo como activo
+      if (boton) boton.classList.add("active");
+
+      // Eliminar scripts anteriores de vista
       document.querySelectorAll("script[data-vista]").forEach(s => s.remove());
 
-      // Usar import dinámico para poder llamar a inicializarVista
+      // Cargar la vista correspondiente
       try {
         const mod = await import(`./js/${tipo}.js`);
         if (mod.inicializarVista && typeof mod.inicializarVista === "function") {
@@ -47,9 +53,14 @@
 
     // Cargar vista estática al inicio
     window.addEventListener("DOMContentLoaded", () => {
+      const btnInicial = document.querySelector("nav button");
+      if (btnInicial) {
+        btnInicial.classList.add("active");
+      }
       cargarVista("estatica");
     });
   </script>
+
 
 </body>
 

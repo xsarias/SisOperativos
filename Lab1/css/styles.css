@@ -16,6 +16,12 @@ header {
 header h1 {
   margin: 0 0 10px 0;
 }
+/* Estado activo */
+nav button.active {
+  background-color: #1c5980; /* azul más oscuro */
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.4);
+  transform: scale(0.98); /* da efecto presionado */
+}
 
 nav button {
   margin: 5px;
@@ -204,4 +210,26 @@ table td button:hover {
 .estado-global span {
   font-weight: bold;
   color: #1976d2;
+}
+
+.memoria-scroll {
+  max-height: 900px;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+}
+
+.card {
+  margin-bottom: 1em;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 4px 6px;
+  text-align: center;
 }
