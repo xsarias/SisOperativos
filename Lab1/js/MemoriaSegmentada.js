@@ -173,16 +173,11 @@ export class MemoriaSegmentada {
   }
 obtenerEstadisticas() {
     const bytesTotales = this.TAM_TOTAL;
-    const marcos = 256;
-    const tamMarco = bytesTotales / marcos;
 
     const bytesOcupados = this.segmentos
       .filter(s => s.ocupado)
       .reduce((a, s) => a + s.limite, 0);
     const bytesLibres = bytesTotales - bytesOcupados;
-
-    const marcosOcupados = Math.ceil(bytesOcupados / tamMarco);
-    const marcosLibres = marcos - marcosOcupados;
 
     const porcentajeOcupado = ((bytesOcupados / bytesTotales) * 100).toFixed(2);
     const porcentajeLibre = (100 - porcentajeOcupado).toFixed(2);
@@ -194,11 +189,8 @@ obtenerEstadisticas() {
 
     return {
       bytesTotales,
-      marcos,
       bytesOcupados,
       bytesLibres,
-      marcosOcupados,
-      marcosLibres,
       porcentajeOcupado,
       porcentajeLibre,
       stack,
@@ -223,12 +215,12 @@ obtenerEstadisticas() {
 
 // 📋 Procesos disponibles
 export const procesos = [
-  { id: "P1", name: "Notepad", text: 19524, data: 12352, bss: 1165 },
-  { id: "P2", name: "Word", text: 77539, data: 32680, bss: 4100 },
-  { id: "P3", name: "Excel", text: 99542, data: 24245, bss: 7557 },
+  { id: "P1", name: "Notepad", text: 19524, data: 123520, bss: 1165 },
+  { id: "P2", name: "Word", text: 77539, data: 326800, bss: 4100 },
+  { id: "P3", name: "Excel", text: 99542, data: 242450, bss: 7557 },
   { id: "P4", name: "AutoCAD", text: 115000, data: 123470, bss: 1123 },
-  { id: "P5", name: "Calculadora", text: 12342, data: 1256, bss: 1756 },
-  { id: "P6", name: "Visual Studio Code", text: 525000, data: 3224000, bss: 51000 },
-  { id: "P7", name: "Spotify", text: 590000, data: 974000, bss: 25000 },
-  { id: "P8", name: "Adobe Acrobat", text: 349000, data: 2150000, bss: 1000 },
+  { id: "P5", name: "Calculadora", text: 12342, data: 125600, bss: 1756 },
+  { id: "P6", name: "Visual Studio Code", text: 525000, data: 8224000, bss: 51000 },
+  { id: "P7", name: "Spotify", text: 590000, data: 4974000, bss: 25000 },
+  { id: "P8", name: "Adobe Acrobat", text: 349000, data: 7150000, bss: 1000 },
 ];

@@ -58,7 +58,6 @@ export function inicializarVista() {
           <tbody>
             <tr><td>RAM instalada</td><td>16 MiB</td></tr>
             <tr><td>Bytes totales</td><td id="bytesTotales"></td></tr>
-            <tr><td>N° marcos</td><td>256</td></tr>
             <tr><td>Ocupado</td><td id="infoOcupado"></td></tr>
             <tr><td>Libre</td><td id="infoLibre"></td></tr>
             <tr><td>.stack total</td><td id="infoStack"></td></tr>
