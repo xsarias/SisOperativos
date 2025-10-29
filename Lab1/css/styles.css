@@ -233,3 +233,187 @@ th, td {
   padding: 4px 6px;
   text-align: center;
 }
+
+
+/* Segmentacion */
+/* ======== 🎨 ESTILOS EXCLUSIVOS DE SEGMENTACIÓN ======== */
+
+/* ===== Layout general de segmentación ===== */
+.seg-layout {
+  display: grid;
+  grid-template-columns: 0.9fr 1.2fr;
+  gap: 20px;
+  align-items: start;
+  background: #f5f5f5;
+  padding: 20px;
+}
+
+/* ===== Tarjetas ===== */
+.seg-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.seg-card h2 {
+  margin-top: 0;
+  text-align: center;
+  color: #34495e;
+  font-size: 1.2em;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 6px;
+}
+
+/* ===== Tabla de programas ===== */
+#seg-tabla-programas {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 15px 0;
+  font-size: 13px;
+}
+
+#seg-tabla-programas th,
+#seg-tabla-programas td {
+  border: 1px solid #bbb;
+  padding: 6px;
+  text-align: center;
+}
+
+#seg-tabla-programas th {
+  background-color: #34495e;
+  color: white;
+}
+
+.seg-btn-cargar,
+.seg-btn-liberar {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.seg-btn-cargar {
+  background: #27ae60;
+}
+
+.seg-btn-cargar:hover {
+  background: #1e8449;
+}
+
+.seg-btn-liberar {
+  background: #c0392b;
+}
+
+.seg-btn-liberar:hover {
+  background: #922b21;
+}
+
+/* ===== Sección de memoria ===== */
+.seg-memoria {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #444;
+  height: 700px;
+  font-size: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* ===== Mapa de memoria ===== */
+.seg-memoria-scroll {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+}
+
+/* Bloques de memoria */
+.seg-bloque {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  font-weight: bold;
+  border-bottom: 1px solid #bbb;
+  transition: transform 0.15s ease-in-out;
+  flex-grow: 1;
+}
+
+/* Colores por tipo de segmento */
+.seg-so {
+  background: #9b59b6;
+  color: #fff;
+}
+
+.seg-ocupado {
+  background: #c95245;
+  color: #fff;
+}
+
+.seg-libre {
+  background: #419464;
+  color: #fff;
+}
+
+
+
+/* Direcciones */
+.seg-dir-hex,
+.seg-dir-dec {
+  font-family: monospace;
+  font-size: 0.75em;
+  opacity: 0.9;
+}
+
+/* Información general */
+.seg-programas table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.seg-programas td {
+  border: 1px solid #ccc;
+  padding: 4px 6px;
+  text-align: center;
+}
+
+/* ===== Dinámica visual ===== */
+/* Siempre mostrar bloque libre arriba */
+#seg-mapa-memoria {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+/* ===== Ajustes visuales ===== */
+.seg-tam {
+  font-weight: normal;
+  opacity: 0.85;
+  font-size: 0.8em;
+}
+
+/* Bordes y sombras sutiles */
+.seg-card {
+  margin-bottom: 1em;
+}
+
+/* Scroll suave */
+.seg-memoria-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.seg-memoria-scroll::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 4px;
+}
+
+.seg-memoria-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #888;
+}
