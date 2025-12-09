@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Algoritmos de Planificación de CPU</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Planificación a Corto Plazo</h1>
+    <p>FCFS • SJF • SRTF • RR</p>
+  </header>
+
+  <main class="container">
+    <section class="panel inputs">
+      <h2>Procesos</h2>
+      <form id="process-form" class="form-grid" autocomplete="off">
+        <label>
+          ID
+          <input type="text" id="p-id" placeholder="P1" required />
+        </label>
+        <label>
+          Llegada (t0)
+          <input type="number" id="p-arrival" min="0" value="0" required />
+        </label>
+        <label>
+          Ejecución (t)
+          <input type="number" id="p-burst" min="1" value="5" required />
+        </label>
+        <label>
+          Bloqueo inicio
+          <input type="number" id="p-block-start" min="0" value="0" />
+        </label>
+        <label>
+          Bloqueo duración
+          <input type="number" id="p-block-duration" min="0" value="0" />
+        </label>
+        <button type="submit" class="btn primary">Agregar</button>
+        <button type="button" id="btn-clear" class="btn">Limpiar</button>
+      </form>
+
+      <div class="table-wrap">
+        <table id="process-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Instante llegada (li)</th>
+              <th>Ejecución (t)</th>
+              <th>Bloqueo inicio</th>
+              <th>Bloqueo duración</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div id="q-badge" class="q-badge" title="Quantum para RR" style="display:none;">Q = <span>3</span></div>
+      </div>
+    </section>
+
+    <section class="panel controls">
+      <h2>Algoritmo</h2>
+      <div class="control-grid">
+        <label class="select">
+          Selección
+          <select id="algo-select">
+            <option value="FCFS">FCFS - First Come, First Served</option>
+            <option value="SJF">SJF - Shortest Job First</option>
+            <option value="SRTF">SRTF - Shortest Remaining Time First</option>
+            <option value="RR">RR - Round Robin</option>
+          </select>
+        </label>
+        <label id="quantum-field">
+          Quantum
+          <input type="number" id="rr-quantum" min="1" value="3" />
+        </label>
+        <button id="btn-run" class="btn success">Ejecutar</button>
+        <button id="btn-demo" class="btn">Cargar Demo</button>
+      </div>
+    </section>
+
+    <section class="panel outputs">
+      <h2>Resultados</h2>
+      <!-- Métricas compactas removidas para evitar duplicación; se deja solo la tabla completa debajo -->
+
+      <div class="gantt" id="gantt"></div>
+
+      <div class="table-wrap" style="margin-top:12px;">
+        <table id="system-summary">
+          <thead>
+            <tr>
+              <th>Tiempo encendido</th>
+              <th>Tiempo procesos</th>
+              <th>Tiempo sistema</th>
+              <th>% CPU procesos</th>
+              <th>% CPU sistema</th>
+              <th>Promedio de retorno</th>
+              <th>Promedio de ejecución</th>
+              <th>Promedio de espera</th>
+              <th>Promedio de tiempo perdido</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="table-wrap" style="margin-top:12px;">
+        <table id="per-process-metrics">
+          <thead>
+            <tr>
+              <th>Proceso</th>
+              <th>Ejecución t</th>
+              <th>Espera</th>
+              <th>Instante fin If</th>
+              <th>Retorno T</th>
+              <th>Tiempo perdido T - t</th>
+              <th>Penalidad Ip = T/t</th>
+              <th>Respuesta R</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <small>SO • Gestión de Procesos • Planificación</small>
+  </footer>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
