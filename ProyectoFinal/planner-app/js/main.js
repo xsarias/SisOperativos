@@ -91,7 +91,11 @@ function run() {
   }
   state.timeline = result.timeline;
   state.resultProcs = result.processes;
-  renderGantt(gantt, state.timeline, { algo: algoSelect.value, quantum: Number(quantumInput.value) || 0 });
+  renderGantt(gantt, state.timeline, { 
+    algo: algoSelect.value, 
+    quantum: Number(quantumInput.value) || 0,
+    processes: state.resultProcs  // ← OBLIGATORIO
+  });
   renderPerProcessMetrics(perProcMetricsBody, state.resultProcs);
   renderSystemSummary(systemSummaryBody, state.timeline, state.resultProcs);
   updateQBadge();
@@ -102,9 +106,6 @@ function loadDemo() {
     new Process({ id: 'A', arrival: 0, burst: 6, blockStart: 3, blockDuration: 2 }),
     new Process({ id: 'B', arrival: 1, burst: 8, blockStart: 1, blockDuration: 3 }),
     new Process({ id: 'C', arrival: 2, burst: 7, blockStart: 5, blockDuration: 1 }),
-    new Process({ id: 'D', arrival: 4, burst: 3, blockStart: 0, blockDuration: 0 }),
-    new Process({ id: 'E', arrival: 6, burst: 9, blockStart: 2, blockDuration: 4 }),
-    new Process({ id: 'F', arrival: 6, burst: 2, blockStart: 0, blockDuration: 0 }),
   ];
   algoSelect.value = 'RR';
   quantumInput.value = 3;

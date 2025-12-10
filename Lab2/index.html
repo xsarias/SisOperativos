@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Simulación de Memoria</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <header>
+    <h1>Simulación de Memoria</h1>
+    <nav>
+      <button onclick="cargarVista('estatica', this)">Estática Tamaño Fijo</button>
+      <button onclick="cargarVista('estatvari', this)">Estática Variable</button>
+      <button onclick="cargarVista('SinCompactacion', this)">Dinámica sin Compactación</button>
+      <button onclick="cargarVista('compactacion', this)">Dinámica con Compactación</button>
+      <button onclick="cargarVista('segmentacion', this)">Segmentación</button>
+      <button onclick="cargarVista('paginacion', this)">Paginación</button>
+    </nav>
+  </header>
+
+
+  <main>
+    <div id="contenedor"></div>
+  </main>
+
+  <script>
+    async function cargarVista(tipo, boton = null) {
+      const contenedor = document.getElementById("contenedor");
+      contenedor.innerHTML = "";
+
+      // Quitar clase "active" de todos los botones del menú
+      document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
+
+      // Si se hizo clic en un botón, marcarlo como activo
+      if (boton) boton.classList.add("active");
+
+      // Eliminar scripts anteriores de vista
+      document.querySelectorAll("script[data-vista]").forEach(s => s.remove());
+
+      // Cargar la vista correspondiente
+      try {
+        const mod = await import(`./js/${tipo}.js`);
+        if (mod.inicializarVista && typeof mod.inicializarVista === "function") {
+          mod.inicializarVista();
+          console.log(`Vista ${tipo} inicializada`);
+        }
+      } catch (err) {
+        console.error(`Error cargando la vista ${tipo}:`, err);
+      }
+    }
+
+    // Cargar vista estática al inicio
+    window.addEventListener("DOMContentLoaded", () => {
+      const btnInicial = document.querySelector("nav button");
+      if (btnInicial) {
+        btnInicial.classList.add("active");
+      }
+      cargarVista("estatica");
+    });
+  </script>
+
+
+</body>
+
+</html>

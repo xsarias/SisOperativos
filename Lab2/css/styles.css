@@ -1,0 +1,419 @@
+/* ===== Estilos generales ===== */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f5f5f5;
+}
+
+header {
+  background-color: #34495e;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0 0 10px 0;
+}
+/* Estado activo */
+nav button.active {
+  background-color: #1c5980; /* azul más oscuro */
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.4);
+  transform: scale(0.98); /* da efecto presionado */
+}
+
+nav button {
+  margin: 5px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  background-color: #2980b9;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+nav button:hover {
+  background-color: #1c5980;
+}
+
+main {
+  padding: 20px;
+}
+
+/* ===== Layout general ===== */
+.layout {
+  display: grid;
+  grid-template-columns: 0.88fr 1.2fr 0.8fr;
+  /* tabla - programas - memoria */
+  gap: 20px;
+  align-items: start;
+}
+
+/* ===== Secciones tipo tarjeta ===== */
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+  margin-top: 0;
+  text-align: center;
+  color: #34495e;
+  font-size: 1.2em;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 6px;
+}
+
+/* ===== Tablas ===== */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 15px 0;
+  font-size: 13px;
+}
+
+table th,
+table td {
+  border: 1px solid #bbb;
+  padding: 6px;
+  text-align: center;
+}
+
+table th {
+  background-color: #34495e;
+  color: white;
+}
+
+table td button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  background: #27ae60;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+table td button:hover {
+  background: #1e8449;
+}
+
+/* ===== Estado global ===== */
+.programas p {
+  background: #ecf0f1;
+  padding: 6px;
+  border-radius: 5px;
+  font-weight: bold;
+  margin: 5px 0;
+  text-align: center;
+}
+
+/* ===== Mapa de Memoria ===== */
+.memoria {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #444;
+  height: 700px;
+  /* más alto y visible */
+  font-size: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  /* sin scroll */
+}
+
+.bloque {
+  flex: 1;
+  /* cada bloque ocupa el mismo espacio */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #888;
+  padding: 2px 6px;
+  font-weight: bold;
+}
+
+/* Colores */
+.bloque.SO {
+  background: #9b59b6;
+  color: white;
+}
+
+.bloque.ocupado {
+  background: #c95245;
+  color: white;
+}
+
+.bloque.libre {
+  background: #419464;
+  color: white;
+}
+
+/* Direcciones */
+.dir-hex,
+.dir-dec {
+  font-family: monospace;
+  font-size: 0.75em;
+  color: #222;
+}
+
+/* Estilos para las particiones */
+.particion {
+  border: 1px solid #ccc;
+  margin: 2px 0;
+  padding: 6px;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Colores según estado */
+.particion.libre {
+  background: #e8f5e9;
+  /* verde claro */
+  color: #2e7d32;
+  border: 1px solid #81c784;
+}
+
+.particion.ocupado {
+  background: #ffebee;
+  /* rojo claro */
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+/* Estado global */
+.estado-global {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f4f6f8;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.estado-global h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: #444;
+}
+
+.estado-global p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+}
+
+.estado-global span {
+  font-weight: bold;
+  color: #1976d2;
+}
+
+.memoria-scroll {
+  max-height: 900px;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+}
+
+.card {
+  margin-bottom: 1em;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 4px 6px;
+  text-align: center;
+}
+
+
+/* Segmentacion */
+/* ======== 🎨 ESTILOS EXCLUSIVOS DE SEGMENTACIÓN ======== */
+
+/* ===== Layout general de segmentación ===== */
+.seg-layout {
+  display: grid;
+  grid-template-columns: 0.9fr 1.2fr;
+  gap: 20px;
+  align-items: start;
+  background: #f5f5f5;
+  padding: 20px;
+}
+
+/* ===== Tarjetas ===== */
+.seg-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.seg-card h2 {
+  margin-top: 0;
+  text-align: center;
+  color: #34495e;
+  font-size: 1.2em;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 6px;
+}
+
+/* ===== Tabla de programas ===== */
+#seg-tabla-programas {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 15px 0;
+  font-size: 13px;
+}
+
+#seg-tabla-programas th,
+#seg-tabla-programas td {
+  border: 1px solid #bbb;
+  padding: 6px;
+  text-align: center;
+}
+
+#seg-tabla-programas th {
+  background-color: #34495e;
+  color: white;
+}
+
+.seg-btn-cargar,
+.seg-btn-liberar {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.seg-btn-cargar {
+  background: #27ae60;
+}
+
+.seg-btn-cargar:hover {
+  background: #1e8449;
+}
+
+.seg-btn-liberar {
+  background: #c0392b;
+}
+
+.seg-btn-liberar:hover {
+  background: #922b21;
+}
+
+/* ===== Sección de memoria ===== */
+.seg-memoria {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #444;
+  height: 700px;
+  font-size: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* ===== Mapa de memoria ===== */
+.seg-memoria-scroll {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+}
+
+/* Bloques de memoria */
+.seg-bloque {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  font-weight: bold;
+  border-bottom: 1px solid #bbb;
+  transition: transform 0.15s ease-in-out;
+  flex-grow: 1;
+}
+
+/* Colores por tipo de segmento */
+.seg-so {
+  background: #9b59b6;
+  color: #fff;
+}
+
+.seg-ocupado {
+  background: #c95245;
+  color: #fff;
+}
+
+.seg-libre {
+  background: #419464;
+  color: #fff;
+}
+
+
+
+/* Direcciones */
+.seg-dir-hex,
+.seg-dir-dec {
+  font-family: monospace;
+  font-size: 0.75em;
+  opacity: 0.9;
+}
+
+/* Información general */
+.seg-programas table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.seg-programas td {
+  border: 1px solid #ccc;
+  padding: 4px 6px;
+  text-align: center;
+}
+
+/* ===== Dinámica visual ===== */
+/* Siempre mostrar bloque libre arriba */
+#seg-mapa-memoria {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+/* ===== Ajustes visuales ===== */
+.seg-tam {
+  font-weight: normal;
+  opacity: 0.85;
+  font-size: 0.8em;
+}
+
+/* Bordes y sombras sutiles */
+.seg-card {
+  margin-bottom: 1em;
+}
+
+/* Scroll suave */
+.seg-memoria-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.seg-memoria-scroll::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 4px;
+}
+
+.seg-memoria-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #888;
+}

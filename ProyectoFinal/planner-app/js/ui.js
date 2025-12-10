@@ -31,6 +31,7 @@ export function renderResultsTimeline(resultTableBody, timeline) {
 }
 
 export function renderGantt(container, timeline, opts = {}) {
+  console.log(timeline)
   container.innerHTML = '';
   const endTime = timeline.length ? timeline[timeline.length - 1].time + 1 : 0;
   const processes = opts.processes || [];
